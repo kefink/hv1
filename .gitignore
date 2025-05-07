@@ -1,0 +1,6 @@
+fresh_venv/
+__pycache__/
+*.pyc
+instance/
+*.pdf
+*.log

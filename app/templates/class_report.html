@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Report</title>
+</head>
+<body>
+    <h1>Class Report - Grade {{ grade }} Stream {{ stream }}</h1>
+    <p>Education Level: {{ education_level }}</p>
+    <p>Term: {{ term.replace('_', ' ').title() }}</p>
+    <p>Assessment Type: {{ assessment_type.title() }}</p>
+    <p>Total Marks: {{ total_marks }}</p>
+    {% for item in report_data %}
+    <h2>{{ item.subject }}</h2>
+    <p>Mean Score: {{ item.mean_score|round(2) }} ({{ item.mean_percentage|round(1) }}%)</p>
+    <p>Performance: {{ item.mean_performance }}</p>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Marks</th>
+                <th>Percentage</th>
+                <th>Performance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mark in item.marks %}
+            <tr>
+                <td>{{ mark[0] }}</td>
+                <td>{{ mark[1] }}</td>
+                <td>{{ mark[2]|round(1) }}%</td>
+                <td>{{ mark[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+    <a href="{{ url_for('generate_class_pdf', grade=grade, stream=stream) }}">Download PDF</a>
+</body>
+</html>

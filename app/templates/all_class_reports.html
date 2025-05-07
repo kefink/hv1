@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <!-- Add Bootstrap 4 CSS for pagination styling -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <title>Class Reports</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+      }
+      main {
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: white;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #ddd;
+      }
+      .pagination {
+        margin-top: 20px;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>All Class Reports</h1>
+      <a
+        href="{{ url_for('classteacher') }}"
+        class="btn"
+        style="color: white; text-decoration: underline"
+        >Back to dashboard</a
+      >
+    </header>
+    <main>
+      <table>
+        <thead>
+          <tr>
+            <th>Grade</th>
+            <th>Stream</th>
+            <th>Term</th>
+            <th>Assessment</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for report in all_reports %}
+          <tr>
+            <td>{{ report.grade }}</td>
+            <td>{{ report.stream }}</td>
+            <td>{{ report.term }}</td>
+            <td>{{ report.assessment_type }}</td>
+            <td>{{ report.date }}</td>
+            <td>
+              <a
+                href="{{ url_for('preview_class_report', grade=report.grade, stream=report.stream, term=report.term, assessment_type=report.assessment_type) }}"
+                class="btn"
+                style="background-color: #007bff"
+              >
+                Preview
+              </a>
+              <a
+                href="{{ url_for('generate_class_pdf', grade=report.grade, stream=report.stream, term=report.term, assessment_type=report.assessment_type) }}"
+                class="btn"
+                style="background-color: #28a745; margin-left: 5px"
+              >
+                Download
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- Add pagination links -->
+      <div class="pagination">
+        {{ pagination.links }}
+      </div>
+    </main>
+  </body>
+</html>

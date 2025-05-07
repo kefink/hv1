@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Headteacher Dashboard - Kirima Primary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --secondary-color: #1e40af;
+        --success-color: #059669;
+        --danger-color: #dc2626;
+        --warning-color: #d97706;
+        --info-color: #0284c7;
+        --light-bg: #f8fafc;
+        --dark-text: #1e293b;
+        --light-text: #64748b;
+        --border-radius: 12px;
+        --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --transition: all 0.3s ease;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f1f5f9;
+        color: var(--dark-text);
+        line-height: 1.6;
+      }
+
+      /* Navigation */
+      .navbar {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 1rem 2rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--primary-color) !important;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .navbar-brand i {
+        font-size: 1.8rem;
+      }
+
+      .nav-link {
+        color: var(--dark-text) !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 8px;
+        transition: var(--transition);
+      }
+
+      .nav-link:hover {
+        background-color: #e2e8f0;
+        transform: translateY(-2px);
+      }
+
+      .nav-link i {
+        margin-right: 8px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .logout-btn {
+        background-color: var(--danger-color);
+        color: white !important;
+        border-radius: 8px;
+      }
+
+      .logout-btn:hover {
+        background-color: #b91c1c !important;
+      }
+
+      /* Main Content */
+      .dashboard-container {
+        margin-top: 80px;
+        padding: 2rem;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .section-header {
+        margin: 2.5rem 0 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark-text);
+        margin: 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .section-header h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 2px;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: var(--transition);
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--dark-text);
+      }
+
+      /* Highlights Grid */
+      .highlights-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .highlight-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        transition: var(--transition);
+      }
+
+      .highlight-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .highlight-label {
+        font-size: 0.9rem;
+        color: var(--light-text);
+        margin-bottom: 0.5rem;
+      }
+
+      .highlight-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        margin-bottom: 2rem;
+      }
+
+      /* Data Table */
+      .data-card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        overflow: hidden;
+        margin-bottom: 2rem;
+      }
+
+      .card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+      }
+
+      .card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark-text);
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .data-table th,
+      .data-table td {
+        padding: 1rem 1.5rem;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .data-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: var(--light-text);
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+      }
+
+      .data-table tr:hover {
+        background-color: #f8fafc;
+      }
+
+      .gender-male {
+        color: #2563eb;
+        font-weight: 500;
+      }
+
+      .gender-female {
+        color: #db2777;
+        font-weight: 500;
+      }
+
+      .stream-row {
+        background-color: #f8fafc;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .dashboard-container {
+          padding: 1rem;
+        }
+        
+        .stats-grid,
+        .highlights-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .navbar-nav {
+          margin-top: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <a href="{{ url_for('headteacher.headteacher') }}" class="navbar-brand">
+        <i class="fas fa-school"></i> Kirima Primary School
+      </a>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="{{ url_for('headteacher.headteacher') }}" class="nav-link">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-chart-bar"></i> Reports
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="fas fa-users"></i> Staff
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('auth.logout') }}" class="nav-link logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="dashboard-container" style="margin-top: 80px;">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="background-color: {% if category == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if category == 'error' %}#721c24{% else %}#155724{% endif %}; padding: 10px; margin: 10px 0; border-radius: 5px;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Dashboard Actions -->
+      <div class="dashboard-actions">
+        <button class="action-btn action-btn-outline">
+          <span>Filter Data</span>
+        </button>
+        <button class="action-btn">
+          <span>Generate Report</span>
+        </button>
+      </div>
+
+      <!-- School Statistics -->
+      <div class="section-header">
+        <h2>School Statistics</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Students</div>
+          <div class="stat-value">{{ total_students }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Teachers</div>
+          <div class="stat-value">{{ total_teachers }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average Performance</div>
+          <div class="stat-value">{{ avg_performance }}%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Classes</div>
+          <div class="stat-value">{{ total_classes }}</div>
+        </div>
+      </div>
+
+      <!-- Performance Highlights -->
+      <div class="section-header">
+        <h2>Performance Highlights</h2>
+      </div>
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <div class="highlight-label">Top Performing Class</div>
+          <div class="highlight-value">{{ top_class }}</div>
+          <p>Average score: {{ top_class_score }}%</p>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-label">Least Performing Grade</div>
+          <div class="highlight-value">{{ least_performing_grade }}</div>
+          <p>Average score: {{ least_grade_score }}%</p>
+        </div>
+      </div>
+
+      <!-- Charts for Data Visualization -->
+      <div class="section-header">
+        <h2>Performance Overview</h2>
+      </div>
+      <div class="chart-container">
+        <canvas id="performanceChart"></canvas>
+      </div>
+      <script>
+        // Chart.js configuration
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ performance_data | map(attribute='grade') | list | tojson | safe }},
+                datasets: [{
+                    label: 'Mean Percentage (%)',
+                    data: {{ performance_data | map(attribute='mean_percentage') | list | tojson | safe }},
+                    backgroundColor: 'rgba(30, 111, 92, 0.6)',
+                    borderColor: 'rgba(30, 111, 92, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Grade/Stream'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+      </script>
+
+      <!-- Learners per Grade -->
+      <div class="section-header">
+        <h2>Learners per Grade</h2>
+      </div>
+      <div class="data-card">
+        <div class="card-header">
+          <h3 class="card-title">Grade Distribution</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Grade/Stream</th>
+                <th>Total Learners</th>
+                <th>Boys</th>
+                <th>Girls</th>
+                <th>Gender Ratio</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for grade, count in learners_per_grade.items() %}
+              <tr class="grade-row">
+                <td><strong>{{ grade }}</strong></td>
+                <td>{{ count }}</td>
+                <td class="gender-male">
+                  {{ gender_per_grade[grade]['Male'] }}
+                </td>
+                <td class="gender-female">
+                  {{ gender_per_grade[grade]['Female'] }}
+                </td>
+                <td>
+                  {{ ((gender_per_grade[grade]['Male'] / count) * 100) | round
+                  }}% : {{ ((gender_per_grade[grade]['Female'] / count) * 100) |
+                  round }}%
+                </td>
+              </tr>
+              {% for stream_name, stream_data in
+              streams_per_grade[grade].items() %}
+              <tr class="stream-row">
+                <td style="padding-left: 30px">{{ stream_name }}</td>
+                <td>{{ stream_data['total'] }}</td>
+                <td class="gender-male">{{ stream_data['Male'] }}</td>
+                <td class="gender-female">{{ stream_data['Female'] }}</td>
+                <td>
+                  {% if stream_data['total'] > 0 %} {{ ((stream_data['Male'] /
+                  stream_data['total']) * 100) | round }}% : {{
+                  ((stream_data['Female'] / stream_data['total']) * 100) | round
+                  }}% {% else %} N/A {% endif %}
+                </td>
+              </tr>
+              {% endfor %} {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Performance Overview -->
+      <div class="section-header">
+        <h2>Detailed Performance</h2>
+      </div>
+      <div class="data-card">
+        <div class="card-header">
+          <h3 class="card-title">Assessment Results by Grade and Stream</h3>
+        </div>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Grade</th>
+                <th>Stream</th>
+                <th>Term</th>
+                <th>Assessment Type</th>
+                <th>Mean Score</th>
+                {% if subject_averages %} {% for subject in
+                subject_averages[0].keys() %}
+                <th>{{ subject }} Avg</th>
+                {% endfor %} {% endif %}
+                <th>Performance</th>
+                <th>E.E Count</th>
+                <th>M.E Count</th>
+                <th>A.E Count</th>
+                <th>B.E Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for data in performance_data %}
+              <tr>
+                <td><strong>{{ data.grade }}</strong></td>
+                <td>{{ data.stream }}</td>
+                <td>{{ data.term }}</td>
+                <td>{{ data.assessment_type }}</td>
+                <td><strong>{{ data.mean_percentage }}%</strong></td>
+                {% if subject_averages %} {% for avg in subject_averages %} {%
+                if avg['grade'] == data.grade and avg['stream'] == data.stream
+                %} {% for subject, value in avg.items() %} {% if subject not in
+                ['grade', 'stream'] %}
+                <td>{{ value }}%</td>
+                {% endif %} {% endfor %} {% endif %} {% endfor %} {% endif %}
+                <td
+                  class="{% if data.performance_category == 'Excellent' %}category-excellent{% elif data.performance_category == 'Good' %}category-good{% elif data.performance_category == 'Average' %}category-average{% else %}category-below{% endif %}"
+                >
+                  {{ data.performance_category }}
+                </td>
+                <td>{{ data.performance_counts['E.E'] }}</td>
+                <td>{{ data.performance_counts['M.E'] }}</td>
+                <td>{{ data.performance_counts['A.E'] }}</td>
+                <td>{{ data.performance_counts['B.E'] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% if pagination %}
+        <div class="pagination">{{ pagination.links }}</div>
+        {% endif %}
+      </div>
+
+      <!-- Footer -->
+      <footer>
+        <p>Kirima Primary School powered by CbcTeachkit</p>
+      </footer>
+    </div>
+  </body>
+</html>

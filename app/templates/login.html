@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Kirima Primary School</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Additional styles specific to login page */
+      .background {
+        background: linear-gradient(135deg, #1e6f5c 0%, #29bb89 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+
+      .container {
+        text-align: center;
+        max-width: 500px;
+        padding: 2rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        color: white;
+        font-weight: 700;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .login-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        padding: 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background-color: #f8c537;
+        color: #144e39;
+      }
+
+      .btn-primary:hover {
+        background-color: #e6b732;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid white;
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .form-footer {
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          width: 90%;
+          padding: 1.5rem;
+        }
+
+        h1 {
+          font-size: 2.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="background">
+    <div class="container">
+      <div class="logo">
+        <h1>Kirima Primary School</h1>
+        <p class="tagline">Excellence in Education</p>
+      </div>
+
+      <div class="login-buttons">
+        <a href="{{ url_for('auth.admin_login') }}" class="btn btn-primary">
+          Admin (Headteacher)
+        </a>
+        <a href="{{ url_for('auth.teacher_login') }}" class="btn btn-secondary">
+          Subject Teacher Login
+        </a>
+        <a
+          href="{{ url_for('auth.classteacher_login') }}"
+          class="btn btn-secondary"
+        >
+          Class Teacher Login
+        </a>
+      </div>
+
+      <div class="form-footer">
+        <p>© 2025 Kirima Primary School. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

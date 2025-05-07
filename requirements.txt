@@ -1,0 +1,14 @@
+flask==2.3.3
+flask-sqlalchemy==3.0.5
+reportlab==4.0.9
+pandas==2.1.4
+openpyxl==3.1.2
+werkzeug==3.0.1
+# For password hashing
+flask-wtf==1.2.1
+# For CSRF protection
+flask-limiter==3.12
+# For rate limiting
+flask-caching==2.3.0
+# For caching
+flask-paginate

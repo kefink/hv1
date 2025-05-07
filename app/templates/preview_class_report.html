@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Class Report Preview - Kirima Primary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" style="background-color: {% if category == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if category == 'error' %}#721c24{% else %}#155724{% endif %}; padding: 10px; margin: 10px 0; border-radius: 5px;">
+                    <strong>{{ category | capitalize }}:</strong> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <nav class="navbar">
+        <a href="#" class="navbar-brand">Kirima Primary School</a>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="{{ url_for('teacher') }}" class="nav-link">Dashboard</a></li>
+            <li class="nav-item"><a href="{{ url_for('logout') }}" class="logout-btn">Logout</a></li>
+        </ul>
+    </nav>
+
+    <div class="container" style="max-width: 90%; margin-top: 80px;">
+        <h1 class="text-center mb-4">Class Report Preview</h1>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <span>Kirima Primary School</span>
+            </div>
+
+            <div class="header text-center mb-4">
+                <h3>Grade {{ grade }} {{ education_level.upper() }} Marksheet: Average Score</h3>
+                <p>Stream: {{ stream }} | Term: {{ term.replace('_', ' ').upper() }} | Assessment: {{ assessment_type.upper() }}</p>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Student Name</th>
+                            {% for abbr in abbreviated_subjects %}
+                            <th>{{ abbr }}</th>
+                            {% endfor %}
+                            <th>Total</th>
+                            <th>Avg %</th>
+                            <th>Grade</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if class_data %}
+                            {% for student_data in class_data %}
+                            <tr>
+                                <td>{{ student_data.index }}</td>
+                                <td>{{ student_data.student.upper() }}</td>
+                                {% for subject in subjects %}
+                                <td>{{ student_data.marks.get(subject, 0) | int }}</td>
+                                {% endfor %}
+                                <td>{{ student_data.total_marks | int }}</td>
+                                <td>{{ student_data.average_percentage | round(0) }}%</td>
+                                <td>{{ student_data.performance_category }}</td>
+                                <td>{{ student_data.rank }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{{ 7 + abbreviated_subjects | length }}" style="text-align: center;">No data available for this report.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="performance-summary">
+                <h3 class="mb-3">Performance Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-item exceeding">
+                        <span class="summary-count">{{ stats.exceeding }}</span>
+                        <span class="summary-label">Exceeding Expectation (≥75%)</span>
+                    </div>
+                    <div class="summary-item meeting">
+                        <span class="summary-count">{{ stats.meeting }}</span>
+                        <span class="summary-label">Meeting Expectation (50-74%)</span>
+                    </div>
+                    <div class="summary-item approaching">
+                        <span class="summary-count">{{ stats.approaching }}</span>
+                        <span class="summary-label">Approaching Expectation (30-49%)</span>
+                    </div>
+                    <div class="summary-item below">
+                        <span class="summary-count">{{ stats.below }}</span>
+                        <span class="summary-label">Below Expectation (<30%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer text-center mt-4">
+                <p>Generated on: {{ current_date }}</p>
+                <p>Kirima Primary School powered by CbcTeachkit</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('teacher') }}" class="btn">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Kirima Primary School - All Rights Reserved</p>
+    </footer>
+</body>
+</html>

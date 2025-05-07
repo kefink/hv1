@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Login - Kirima Primary School</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .error-message {
+        background-color: rgba(255, 0, 0, 0.3);
+        padding: 0.5rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        color: white;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body class="background">
+    <div class="container">
+      <h1>Teacher Login</h1>
+
+      <!-- Add flash message display -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="error-message">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <form method="POST" class="login-form">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+          {{ form.username.label }}<br />
+          {{ form.username(size=32, class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label }}<br />
+          {{ form.password(size=32, class="form-control") }}
+        </div>
+
+        <div class="form-group">{{ form.submit(class="btn") }}</div>
+        <a href="{{ url_for('auth.index') }}" class="btn btn-secondary"
+          >Back to Home</a
+        >
+      </form>
+
+      <div class="form-footer">
+        <p>Forgot your password? Contact the administrator.</p>
+      </div>
+    </div>
+  </body>
+</html>

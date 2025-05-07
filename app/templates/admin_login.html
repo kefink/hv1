@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - Kirima Primary School</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="background">
+    <div class="container">
+      <h1>Admin Login</h1>
+
+      <form method="POST" class="login-form">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.username.label }}<br />
+          {{ form.username(size=32, class="form-control") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label }}<br />
+          {{ form.password(size=32, class="form-control") }}
+        </div>
+
+        <div class="form-group">{{ form.submit(class="btn") }}</div>
+        <a href="{{ url_for('auth.index') }}" class="btn btn-secondary"
+          >Back to Home</a
+        >
+      </form>
+
+      <div class="form-footer">
+        <p>Administrator access is restricted to authorized personnel only.</p>
+      </div>
+    </div>
+  </body>
+</html>

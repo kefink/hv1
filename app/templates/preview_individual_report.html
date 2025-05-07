@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Individual Report Preview - Kirima Primary School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .report-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .header p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .student-details p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .remarks {
+            margin-top: 20px;
+        }
+        .remarks h3 {
+            font-size: 16px;
+            color: #333;
+        }
+        .remarks p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <a href="{{ url_for('classteacher') }}" class="back-btn">Back to Dashboard</a>
+        <div class="header">
+            <h1>HILL VIEW SCHOOL</h1>
+            <p>P.O. Box 12345 - 00100, Nairobi, Kenya</p>
+            <p>Tel: 0712345678</p>
+            <p>ACADEMIC REPORT TERM {{ term.replace('_', ' ').upper() }} 2025</p>
+        </div>
+
+        <div class="student-details">
+            <p>{{ student_data.student.upper() }}  ADM NO.: {{ admission_no }}</p>
+            <p>Grade {{ grade }} {{ education_level }} {{ stream }}</p>
+            <p>MEAN GRADE: {{ mean_grade }}</p>
+            <p>Mean Points: {{ mean_points }}  Total Marks: {{ total | int }} out of: {{ total_possible_marks }}</p>
+            <p>Mean Mark: {{ avg_percentage | round(2) }}%</p>
+            <p>Total Points: {{ total_points }}</p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Subjects</th>
+                    <th>Entrance</th>
+                    <th>Mid Term</th>
+                    <th>End Term</th>
+                    <th>Avg.</th>
+                    <th>Subject Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_data %}
+                <tr>
+                    <td>{{ row.subject }}</td>
+                    <td>{{ row.entrance }}</td>
+                    <td>{{ row.mid_term }}</td>
+                    <td>{{ row.end_term }}</td>
+                    <td>{{ row.avg }}</td>
+                    <td>{{ row.remarks | replace(' (TBD)', '') }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td>Totals</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{ total | int }}</td>
+                    <td>{{ total | int }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="remarks">
+            <h3>Class Teacher's Remarks:</h3>
+            <p>Well done! With continued focus and consistency, you have the potential to achieve even more.</p>
+            <p>Class Teacher: Moses Barasa</p>
+            <h3>Head Teacher's Remarks:</h3>
+            <p>Great progress! Your growing confidence is evident - keep practicing, and you'll excel even further.</p>
+            <p>Head Teacher Name: Mr. Paul Mwangi</p>
+            <p>Head Teacher Signature: ____________________</p>
+            <p>Next Term Begins on: TBD</p>
+        </div>
+
+        <div class="footer">
+            <p>Generated on: {{ current_date }}</p>
+            <p>Kirima  School powered by CbcTeachkit</p>
+        </div>
+    </div>
+</body>
+</html>
